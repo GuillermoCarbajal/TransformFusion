@@ -59,11 +59,13 @@ public:
   enum techniqueTypes
   {
     MODE_QUATERNION_AVERAGE = 0,
+	MODE_RIGID_BODY_TRANSFORMATION_FROM_THREE_POINTS = 1,
   };
   
 public:
   void fuseInputTransforms(int techniqueType);
   void QuaternionAverageFusion();
+  void RigidBodyTransformationFromThreePoints();
 
   void SetAndObserveTransformFusionNode(vtkMRMLTransformFusionNode *node);
   vtkGetObjectMacro(TransformFusionNode, vtkMRMLTransformFusionNode);

@@ -244,6 +244,7 @@ void qSlicerTransformFusionModuleWidget::onSingleUpdate()
 
   /*
     MODE_QUATERNION_AVERAGE = 0
+    MODE_RIGID_BODY_TRANSFORMATION_FROM_THREE_POINTS = 1
   */
   d->logic()->fuseInputTransforms(d->techniqueBox->currentIndex());
 }

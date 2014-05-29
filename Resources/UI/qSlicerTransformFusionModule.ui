@@ -15,14 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="ctkCollapsibleButton" name="parameterNodeBox">
+    <widget class="ctkCollapsibleButton" name="parameterNodeBox" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="text">
+     <property name="text" stdset="0">
       <string>Parameter Set</string>
      </property>
      <layout class="QFormLayout" name="formLayout_4">
@@ -36,7 +36,7 @@
        <number>4</number>
       </property>
       <item row="0" column="1">
-       <widget class="qMRMLNodeComboBox" name="ParameterComboBox">
+       <widget class="qMRMLNodeComboBox" name="ParameterComboBox" native="true">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -46,15 +46,15 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="nodeTypes">
+        <property name="nodeTypes" stdset="0">
          <stringlist>
           <string>vtkMRMLTransformFusionNode</string>
          </stringlist>
         </property>
-        <property name="showHidden">
+        <property name="showHidden" stdset="0">
          <bool>true</bool>
         </property>
-        <property name="renameEnabled">
+        <property name="renameEnabled" stdset="0">
          <bool>false</bool>
         </property>
        </widget>
@@ -63,18 +63,15 @@
     </widget>
    </item>
    <item>
-    <widget class="ctkCollapsibleButton" name="ioBox">
+    <widget class="ctkCollapsibleButton" name="ioBox" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="text">
+     <property name="text" stdset="0">
       <string>Input/Output</string>
-     </property>
-     <property name="contentsFrameShape">
-      <enum>QFrame::StyledPanel</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="sizeConstraint">
@@ -90,16 +87,16 @@
           <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <item row="0" column="1">
-          <widget class="qMRMLNodeComboBox" name="addTransformComboBox">
-           <property name="nodeTypes">
+          <widget class="qMRMLNodeComboBox" name="addTransformComboBox" native="true">
+           <property name="nodeTypes" stdset="0">
             <stringlist>
              <string>vtkMRMLLinearTransformNode</string>
             </stringlist>
            </property>
-           <property name="noneEnabled">
+           <property name="noneEnabled" stdset="0">
             <bool>false</bool>
            </property>
-           <property name="renameEnabled">
+           <property name="renameEnabled" stdset="0">
             <bool>true</bool>
            </property>
           </widget>
@@ -138,16 +135,16 @@
         </property>
         <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0" colspan="2">
-          <widget class="qMRMLNodeComboBox" name="outputTransformComboBox">
-           <property name="nodeTypes">
+          <widget class="qMRMLNodeComboBox" name="outputTransformComboBox" native="true">
+           <property name="nodeTypes" stdset="0">
             <stringlist>
              <string>vtkMRMLLinearTransformNode</string>
             </stringlist>
            </property>
-           <property name="noneEnabled">
+           <property name="noneEnabled" stdset="0">
             <bool>false</bool>
            </property>
-           <property name="renameEnabled">
+           <property name="renameEnabled" stdset="0">
             <bool>true</bool>
            </property>
           </widget>
@@ -159,12 +156,9 @@
     </widget>
    </item>
    <item>
-    <widget class="ctkCollapsibleButton" name="controlBox_2">
-     <property name="text">
+    <widget class="ctkCollapsibleButton" name="controlBox_2" native="true">
+     <property name="text" stdset="0">
       <string>Control</string>
-     </property>
-     <property name="contentsFrameShape">
-      <enum>QFrame::StyledPanel</enum>
      </property>
      <layout class="QFormLayout" name="formLayout_5">
       <item row="3" column="0" colspan="2">
@@ -181,14 +175,14 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="ctkDoubleSpinBox" name="updateRateBox">
-           <property name="decimals">
+          <widget class="ctkDoubleSpinBox" name="updateRateBox" native="true">
+           <property name="decimals" stdset="0">
             <number>0</number>
            </property>
-           <property name="maximum">
+           <property name="maximum" stdset="0">
             <double>120.000000000000000</double>
            </property>
-           <property name="value">
+           <property name="value" stdset="0">
             <double>60.000000000000000</double>
            </property>
           </widget>
@@ -244,12 +238,17 @@
       </item>
       <item row="0" column="1">
        <widget class="ctkComboBox" name="techniqueBox">
-        <property name="defaultText">
+        <property name="defaultText" stdset="0">
          <string/>
         </property>
         <item>
          <property name="text">
           <string>Quaternion Average</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rigid Body Transformation From Three Points</string>
          </property>
         </item>
        </widget>

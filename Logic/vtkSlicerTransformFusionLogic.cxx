@@ -86,6 +86,11 @@ void vtkSlicerTransformFusionLogic::fuseInputTransforms(int fusionTechnique) //e
       this->QuaternionAverageFusion();
       break;
     }
+    case MODE_RIGID_BODY_TRANSFORMATION_FROM_THREE_POINTS:
+    {
+      this->RigidBodyTransformationFromThreePoints();
+      break;
+    }
   } 
 }
 
@@ -183,4 +188,83 @@ void vtkSlicerTransformFusionLogic::QuaternionAverageFusion()
 #else
   outputNode->SetAndObserveMatrixTransformToParent(outputMatrix);
 #endif
+}
+
+
+
+//-----------------------------------------------------------------------------
+void vtkSlicerTransformFusionLogic::RigidBodyTransformationFromThreePoints(){
+
+  vtkMRMLLinearTransformNode* outputNode = this->TransformFusionNode->GetOutputTransformNode();
+  if (outputNode == NULL)
+  {
+    return;
+  }
+
+  // Average quaternion
+  vtkSmartPointer<vtkMatrix4x4> outputMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+  int numberOfInputs = this->TransformFusionNode->GetNumberOfInputTransformNodes();
+#ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
+  vtkSmartPointer<vtkMatrix4x4> matrix4x4Pointer = vtkSmartPointer<vtkMatrix4x4>::New();
+#else
+  vtkMatrix4x4* matrix4x4Pointer = NULL;
+#endif
+
+  double pointsList[3][3]; 
+  for (int i = 0; i < numberOfInputs; i++)
+  {
+
+#ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
+    this->TransformFusionNode->GetInputTransformNode(i)->GetMatrixTransformToParent(matrix4x4Pointer);
+#else
+    matrix4x4Pointer = this->TransformFusionNode->GetInputTransformNode(i)->GetMatrixTransformToParent();
+#endif
+
+    for (int row = 0; row < 3; row++)
+    {
+        pointsList[row][i] = matrix4x4Pointer->GetElement(row,3);
+    }
+  }
+
+  // orthogonalization part 
+  double rotationMatrix[3][3];
+  double firstVector[3]={ pointsList[0][0]- pointsList[0][1],pointsList[1][0]-pointsList[1][1],pointsList[2][0]-pointsList[2][1]};
+
+  double firstVectorMagnitude = sqrt(firstVector[0]*firstVector[0] + firstVector[1]*firstVector[1] + firstVector[2]*firstVector[2]);
+  firstVector[0] = firstVector[0]/firstVectorMagnitude ;
+  firstVector[1] = firstVector[1]/firstVectorMagnitude ;
+  firstVector[2] = firstVector[2]/firstVectorMagnitude ;
+
+  double secondVector[3]={ pointsList[0][0]- pointsList[0][2],pointsList[1][0]-pointsList[1][2],pointsList[2][0]-pointsList[2][2]};
+  double secondVectorProjection = secondVector[0]*firstVector[0]+secondVector[1]*firstVector[1]+secondVector[2]*firstVector[2];
+  secondVector[0] = secondVector[0]- secondVectorProjection * firstVector[0];
+  secondVector[1] = secondVector[1]- secondVectorProjection * firstVector[1];
+  secondVector[2] = secondVector[2]- secondVectorProjection * firstVector[2];
+  double secondVectorMagnitude = sqrt(secondVector[0]*secondVector[0]+secondVector[1]*secondVector[1]+secondVector[2]*secondVector[2]);
+  secondVector[0] = secondVector[0]/secondVectorMagnitude ;
+  secondVector[1] = secondVector[1]/secondVectorMagnitude ;
+  secondVector[2] = secondVector[2]/secondVectorMagnitude ;
+
+  double thirdVector[3];
+  vtkMath::Cross(firstVector, secondVector, thirdVector);
+
+  double translation[3];
+  translation[0]= (pointsList[0][0] + pointsList[0][1] +  pointsList[0][2])/3 ;
+  translation[1]= (pointsList[1][0] + pointsList[1][1] +  pointsList[1][2])/3 ;
+  translation[2]= (pointsList[2][0] + pointsList[2][1] +  pointsList[2][2])/3 ;
+  
+  for (int row = 0; row < 3; row++)
+  {
+    outputMatrix->SetElement(row,0,firstVector[row]);
+	outputMatrix->SetElement(row,1,secondVector[row]);
+	outputMatrix->SetElement(row,2,thirdVector[row]);
+	outputMatrix->SetElement(row,3,translation[row]);
+  }
+
+#ifdef TRANSFORM_NODE_MATRIX_COPY_REQUIRED
+  outputNode->SetMatrixTransformToParent(outputMatrix);
+#else
+  outputNode->SetAndObserveMatrixTransformToParent(outputMatrix);
+#endif
+
 }
